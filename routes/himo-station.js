@@ -1,46 +1,66 @@
 const express = require('express');
-const { STORE_FILE_PATH, readHimoStation, writeHimoStation } = require('../lib/himo-station-store');
+const {
+  readHimoStation,
+  writeHimoStation,
+} = require('../lib/himo-station-store');
 
 const router = express.Router();
 
 router.get('/station', async (req, res) => {
   try {
     const station = await readHimoStation();
-    return res.json({
+
+    res.json({
       ok: true,
-      ...station,
-      filePath: STORE_FILE_PATH
+      station,
     });
   } catch (error) {
-    console.error('Read himo station error:', error);
-    return res.status(500).json({
-      error: 'ヒモの最寄り駅の読み込みに失敗しました',
-      detail: error.message
+    console.error('GET /api/himo/station error:', error);
+    res.status(500).json({
+      ok: false,
+      code: 'HIMO_STATION_READ_FAILED',
+      message: 'ヒモの駅情報の取得に失敗しました。',
+      detail: error.message,
     });
   }
 });
 
 router.post('/station', async (req, res) => {
   try {
-    const { stationName } = req.body;
-    const normalized = String(stationName || '').trim();
+    const stationName = String(req.body.stationName || '').trim();
+    const latitude = req.body.latitude ?? null;
+    const longitude = req.body.longitude ?? null;
+    const sourceType = req.body.sourceType || 'manual';
+    const updatedBy = req.body.updatedBy || 'admin';
 
-    if (!normalized) {
-      return res.status(400).json({ error: 'stationName を入力してください' });
+    if (!stationName) {
+      return res.status(400).json({
+        ok: false,
+        code: 'STATION_NAME_REQUIRED',
+        message: '駅名を入力してください。',
+      });
     }
 
-    const saved = await writeHimoStation(normalized);
-    return res.json({
+    const station = await writeHimoStation({
+      stationName,
+      sourceType,
+      latitude,
+      longitude,
+      updatedBy,
+    });
+
+    res.json({
       ok: true,
-      message: 'ヒモの最寄り駅を更新しました',
-      ...saved,
-      filePath: STORE_FILE_PATH
+      message: '駅名を更新しました。',
+      station,
     });
   } catch (error) {
-    console.error('Write himo station error:', error);
-    return res.status(500).json({
-      error: 'ヒモの最寄り駅の更新に失敗しました',
-      detail: error.message
+    console.error('POST /api/himo/station error:', error);
+    res.status(500).json({
+      ok: false,
+      code: 'HIMO_STATION_WRITE_FAILED',
+      message: 'ヒモの駅情報の更新に失敗しました。',
+      detail: error.message,
     });
   }
 });

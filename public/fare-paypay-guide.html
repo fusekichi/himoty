@@ -217,7 +217,9 @@
           const himoData = await parseApiResponse(himoRes);
           if (!himoRes.ok) throw new Error(himoData.detail || himoData.error || 'ヒモの駅を取得できませんでした');
 
-          himoStationEl.textContent = himoData.stationName || '未設定';
+          const himo = himoData.station || himoData;
+
+          himoStationEl.textContent = himo.stationName || '未設定';
           himoMetaEl.textContent = himoData.updatedAt
             ? `更新: ${new Date(himoData.updatedAt).toLocaleString('ja-JP')}`
             : 'まだ更新されていません。';
@@ -242,13 +244,13 @@
           userStationEl.textContent = nearestData.station.name || '不明';
           userMetaEl.textContent = `${nearestData.station.address || '住所情報なし'} / 約${nearestData.station.distanceMeters}m`;
 
-          setStatus('電車賃を算出しています', `${nearestData.station.name} から ${himoData.stationName} の往復電車賃を計算しています。`);
+          setStatus('電車賃を算出しています', `${nearestData.station.name} から ${himo.stationName} の往復電車賃を計算しています。`);
           const fareRes = await fetch('/api/yahoo/roundtrip-fare', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               from: nearestData.station.name,
-              to: himoData.stationName
+              to: himo.stationName
             })
           });
           const fareData = await parseApiResponse(fareRes);
@@ -256,7 +258,7 @@
 
           latestRoundTripFare = fareData.roundTripFare;
           roundTripFareEl.textContent = formatYen(fareData.roundTripFare);
-          fareSummaryEl.textContent = `${nearestData.station.name} → ${himoData.stationName} の片道 ${formatYen(fareData.oneWayFare)} / 往復 ${formatYen(fareData.roundTripFare)} です。`;
+          fareSummaryEl.textContent = `${nearestData.station.name} → ${himo.stationName} の片道 ${formatYen(fareData.oneWayFare)} / 往復 ${formatYen(fareData.roundTripFare)} です。`;
           setStatus('計算できました', '金額をコピーして、そのままPayPayへどうぞ。');
         } catch (error) {
           console.error(error);

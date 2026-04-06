@@ -1,6 +1,7 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
+const { readHimoStation } = require('./lib/himo-station-store');
 
 const app = express();
 

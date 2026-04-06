@@ -1,0 +1,25 @@
+app.get('/api/app-config', async (req, res) => {
+  try {
+    const himoStation = await readHimoStation();
+
+    res.json({
+      ok: true,
+      destinationStation: himoStation.stationName,
+      destinationStationUpdatedAt: himoStation.updatedAt,
+      paypayGuideUrl: 'https://paypay.ne.jp/guide/send/',
+      testUserLocation: {
+        label: process.env.TEST_USER_LOCATION_LABEL || '渋谷駅周辺',
+        latitude: 35.658034,
+        longitude: 139.701636,
+      },
+    });
+  } catch (error) {
+    console.error('/api/app-config error:', error);
+    res.status(500).json({
+      ok: false,
+      code: 'APP_CONFIG_LOAD_FAILED',
+      message: 'アプリ設定の読み込みに失敗しました。',
+      detail: error.message,
+    });
+  }
+});

@@ -216,14 +216,17 @@
           const data = await parseApiResponse(response);
           if (!response.ok) throw new Error(data.detail || data.error || '読み込みに失敗しました');
 
-          savedStationNameEl.textContent = data.stationName || '未設定';
-          savedStationMetaEl.textContent = data.updatedAt
-            ? `更新日時: ${new Date(data.updatedAt).toLocaleString('ja-JP')}`
+          const station = data.station || data;
+
+          savedStationNameEl.textContent = station.stationName || '未設定';
+          savedStationMetaEl.textContent = station.updatedAt
+            ? `更新日時: ${new Date(station.updatedAt).toLocaleString('ja-JP')}`
             : 'まだ更新されていません。';
+
           filePathEl.textContent = data.filePath || '不明';
 
           if (!stationInput.value.trim()) {
-            stationInput.value = data.stationName || '';
+            stationInput.value = station.stationName || '';
             updatePreview();
           }
 
@@ -273,25 +276,37 @@
         }
 
         try {
-          setStatus('更新中', `${stationName} を保存ファイルに書き込んでいます。`);
+          setStatus('更新中', `${stationName} を保存先に書き込んでいます。`);
           const response = await fetch('/api/himo/station', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ stationName })
           });
-          const data = await parseApiResponse(response);
-          if (!response.ok) throw new Error(data.detail || data.error || '更新に失敗しました');
 
-          savedStationNameEl.textContent = data.stationName;
-          savedStationMetaEl.textContent = `更新日時: ${new Date(data.updatedAt).toLocaleString('ja-JP')}`;
+          const data = await parseApiResponse(response);
+          if (!response.ok) {
+            throw new Error(data.detail || data.error || '更新に失敗しました');
+          }
+
+          const station = data.station || data;
+
+          savedStationNameEl.textContent = station.stationName || '未設定';
+          savedStationMetaEl.textContent = station.updatedAt
+            ? `更新日時: ${new Date(station.updatedAt).toLocaleString('ja-JP')}`
+            : 'まだ更新されていません。';
+
           filePathEl.textContent = data.filePath || '不明';
           updatePreview();
-          setStatus('更新できました', `${data.stationName} を保存しました。画面の表示も最新になっています。`);
+          setStatus(
+            '更新できました',
+            `${station.stationName || '未設定'} を保存しました。画面の表示も最新になっています。`
+          );
         } catch (error) {
           console.error(error);
           setStatus('エラー', error.message || '更新に失敗しました。');
         }
       }
+
 
       function updatePreview() {
         inputPreviewEl.textContent = stationInput.value.trim() || 'まだ入力されていません。';
