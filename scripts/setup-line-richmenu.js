@@ -56,7 +56,7 @@ function buildRichMenuObject() {
         action: {
           type: 'uri',
           label: 'ヒモがヒマか確認',
-          uri: liffUrl(LIFF_ID_STATUS),
+          uri: liffUrl(LIFF_ID_CALL),
         },
       },
       {
@@ -64,7 +64,7 @@ function buildRichMenuObject() {
         action: {
           type: 'uri',
           label: 'すぐにヒモを呼ぶ',
-          uri: liffUrl(LIFF_ID_CALL),
+          uri: liffUrl(LIFF_ID_STATUS),
         },
       },
       {
@@ -91,7 +91,8 @@ function buildRichMenuObject() {
           label: 'ヒモに連絡を取る',
           data: 'action=contact_himo',
           displayText: 'ヒモに連絡を取る',
-          inputOption: 'closeRichMenu',
+          inputOption: 'openKeyboard',
+          fillInText: '',
         },
       },
       {
