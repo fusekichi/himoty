@@ -109,6 +109,9 @@ router.post(
 );
 
 async function handleLineEvent(event) {
+
+  console.log('handleLineEvent type =', event.type);
+
   if (event.type === 'postback') {
     return handlePostbackEvent(event);
   }
@@ -121,6 +124,9 @@ async function handleLineEvent(event) {
 }
 
 async function handlePostbackEvent(event) {
+
+  console.log('postback event =', JSON.stringify(event, null, 2));
+
   const data = event.postback?.data || '';
   const params = new URLSearchParams(data);
   const action = params.get('action');

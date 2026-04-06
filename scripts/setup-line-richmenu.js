@@ -91,8 +91,7 @@ function buildRichMenuObject() {
           label: 'ヒモに連絡を取る',
           data: 'action=contact_himo',
           displayText: 'ヒモに連絡を取る',
-          inputOption: 'openKeyboard',
-          fillInText: '',
+          inputOption: 'openKeyboard'
         },
       },
       {
