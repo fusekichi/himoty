@@ -144,7 +144,6 @@ async function setDefaultRichMenu(richMenuId) {
 async function main() {
   required('LINE_CHANNEL_ACCESS_TOKEN', CHANNEL_ACCESS_TOKEN);
   required('LIFF_ID_CALL', LIFF_ID_CALL);
-  required('HIMO_CONTACT_URL', HIMO_CONTACT_URL);
 
   if (!fs.existsSync(RICH_MENU_IMAGE_PATH)) {
     throw new Error(`画像ファイルが見つかりません: ${RICH_MENU_IMAGE_PATH}`);
