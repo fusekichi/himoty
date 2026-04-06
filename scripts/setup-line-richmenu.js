@@ -6,8 +6,6 @@ const CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 const LIFF_ID_STATUS = process.env.LIFF_ID_STATUS;
 const LIFF_ID_CALL = process.env.LIFF_ID_CALL;
 const BOOKRUN_URL = process.env.BOOKRUN_URL;
-const HIMOZAP_URL = process.env.HIMOZAP_URL;
-const HIMO_CONTACT_URL = process.env.HIMO_CONTACT_URL;
 const RICH_MENU_IMAGE_PATH =
   process.env.RICH_MENU_IMAGE_PATH ||
   path.join(__dirname, '../public/line-richmenu-2500x1686.png');
@@ -50,17 +48,15 @@ function buildRichMenuObject() {
       height: 1686,
     },
     selected: false,
-    name: 'himoty-main-richmenu-v1',
+    name: 'himoty-main-richmenu-v2',
     chatBarText: 'ヒモティーをひらく',
     areas: [
       {
         bounds: { x: 0, y: 0, width: 834, height: 843 },
         action: {
-          type: 'postback',
+          type: 'uri',
           label: 'ヒモがヒマか確認',
-          data: 'action=check_free_today',
-          displayText: 'ヒモがヒマか確認',
-          inputOption: 'closeRichMenu',
+          uri: liffUrl(LIFF_ID_STATUS),
         },
       },
       {
@@ -82,17 +78,20 @@ function buildRichMenuObject() {
       {
         bounds: { x: 0, y: 843, width: 834, height: 843 },
         action: {
-          type: 'uri',
+          type: 'postback',
           label: 'ヒモザップ',
-          uri: HIMOZAP_URL,
+          data: 'action=himozap_coming_soon',
+          displayText: 'ヒモザップ',
         },
       },
       {
         bounds: { x: 834, y: 843, width: 833, height: 843 },
         action: {
-          type: 'uri',
+          type: 'postback',
           label: 'ヒモに連絡を取る',
-          uri: HIMO_CONTACT_URL,
+          data: 'action=contact_himo',
+          displayText: 'ヒモに連絡を取る',
+          inputOption: 'closeRichMenu',
         },
       },
       {
@@ -102,7 +101,6 @@ function buildRichMenuObject() {
           label: 'ヒモティってなに？',
           data: 'action=about_himoty',
           displayText: 'ヒモティってなに？',
-          inputOption: 'closeRichMenu',
         },
       },
     ],
@@ -146,8 +144,6 @@ async function setDefaultRichMenu(richMenuId) {
 async function main() {
   required('LINE_CHANNEL_ACCESS_TOKEN', CHANNEL_ACCESS_TOKEN);
   required('LIFF_ID_CALL', LIFF_ID_CALL);
-  required('BOOKRUN_URL', BOOKRUN_URL);
-  required('HIMOZAP_URL', HIMOZAP_URL);
   required('HIMO_CONTACT_URL', HIMO_CONTACT_URL);
 
   if (!fs.existsSync(RICH_MENU_IMAGE_PATH)) {

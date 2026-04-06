@@ -126,11 +126,19 @@ async function handlePostbackEvent(event) {
   const action = params.get('action');
 
   switch (action) {
-    case 'check_free_today':
+    case 'himozap_coming_soon':
       return replyMessage(event.replyToken, [
         {
           type: 'text',
-          text: '今日の空き枠を確認します。少々お待ちください。',
+          text: '開発中だよ！',
+        },
+      ]);
+
+    case 'contact_himo':
+      return replyMessage(event.replyToken, [
+        {
+          type: 'text',
+          text: 'メッセージを送ってね！',
         },
       ]);
 
@@ -138,7 +146,7 @@ async function handlePostbackEvent(event) {
       return replyMessage(event.replyToken, [
         {
           type: 'text',
-          text: 'ヒモティは、ヒマ確認から呼び出し、予約、連絡までをゆるく案内する、親しみやすいお助けマスコットです。',
+          text: 'ヒモティとはね！',
         },
       ]);
 
