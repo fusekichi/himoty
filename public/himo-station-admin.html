@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ヒモの場所を更新</title>
+    <style>
+      :root {
+        --bg: #fff8f1;
+        --card: #ffffff;
+        --ink: #3f342c;
+        --sub: #7b6c61;
+        --line: #f1d4bf;
+        --mint: #bbf7d0;
+        --sky: #bfdbfe;
+        --orange: #fdba74;
+        --yellow: #fde68a;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+        color: var(--ink);
+        background: linear-gradient(180deg, #fff8f1 0%, #fffdf8 100%);
+      }
+      .wrap {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 20px 14px 48px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #fed7aa, #fde68a);
+        border-radius: 28px;
+        padding: 22px;
+        box-shadow: 0 12px 28px rgba(251, 146, 60, 0.16);
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 5vw, 38px);
+      }
+      .hero p {
+        margin: 0;
+        line-height: 1.8;
+        color: #6b5b4f;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .card {
+        background: var(--card);
+        border: 2px solid var(--line);
+        border-radius: 24px;
+        padding: 18px;
+        box-shadow: 0 10px 24px rgba(123, 108, 97, 0.08);
+      }
+      .card h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+      }
+      .station-badge {
+        display: inline-block;
+        padding: 12px 16px;
+        border-radius: 999px;
+        background: #fff3cd;
+        font-size: 24px;
+        font-weight: 900;
+      }
+      .meta {
+        margin-top: 10px;
+        color: var(--sub);
+        line-height: 1.7;
+      }
+      .file {
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--sub);
+        word-break: break-all;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 800;
+      }
+      input {
+        width: 100%;
+        border: 2px solid #f3dcc8;
+        border-radius: 16px;
+        padding: 14px;
+        font-size: 16px;
+        font-family: inherit;
+        background: #fffdf9;
+      }
+      .hint {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--sub);
+        line-height: 1.7;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      button, a.btn {
+        appearance: none;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 999px;
+        padding: 14px 18px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #3f342c;
+      }
+      .auto-btn { background: linear-gradient(135deg, var(--mint), var(--sky)); }
+      .save-btn { background: linear-gradient(135deg, var(--yellow), var(--orange)); }
+      .sub-btn { background: #fff; border: 2px solid #f1d4bf; }
+      .status {
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 18px;
+        background: #fffaf2;
+        border: 2px dashed #f3dcc8;
+      }
+      .status strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 16px;
+      }
+      .status p {
+        margin: 0;
+        color: var(--sub);
+        line-height: 1.8;
+      }
+      .preview {
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 18px;
+        background: #f0fdf4;
+        border: 2px solid #bbf7d0;
+      }
+      .preview strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+      @media (max-width: 760px) {
+        .layout { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="hero">
+        <h1>ヒモの場所を更新する</h1>
+        <p>まず現在地から最寄り駅をフォームへ自動入力。必要ならそのまま消して、好きな駅名に書き換えて更新。保存された駅名は、いつでもこの画面に出しておきます。</p>
+      </section>
+
+      <div class="layout">
+        <section class="card">
+          <h2>保存されている駅名</h2>
+          <div class="station-badge" id="savedStationName">読み込み中...</div>
+          <div class="meta" id="savedStationMeta">ファイルを確認しています。</div>
+          <div class="file">保存ファイル: <span id="filePath">読み込み中...</span></div>
+
+          <div class="preview">
+            <strong>いまフォームに入っている値</strong>
+            <div id="inputPreview">まだ入力されていません。</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>駅名を更新する</h2>
+          <label for="stationInput">駅名フォーム</label>
+          <input id="stationInput" type="text" placeholder="例: 恵比寿駅 / 渋谷駅 / 新宿駅" />
+          <div class="hint">現在地から自動入力したあと、手で自由に書き換えてOKです。</div>
+
+          <div class="actions">
+            <button class="auto-btn" id="fillByCurrentLocationBtn">現在地から自動入力</button>
+            <button class="save-btn" id="saveBtn">この駅名で更新</button>
+            <button class="sub-btn" id="reloadBtn">保存内容を再読み込み</button>
+            <a class="btn sub-btn" href="/fare-paypay-guide.html">ユーザー画面を見る</a>
+          </div>
+
+          <div class="status">
+            <strong id="statusTitle">待機中</strong>
+            <p id="statusText">まずは保存されている駅名を読み込みます。</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const savedStationNameEl = document.getElementById('savedStationName');
+      const savedStationMetaEl = document.getElementById('savedStationMeta');
+      const filePathEl = document.getElementById('filePath');
+      const stationInput = document.getElementById('stationInput');
+      const inputPreviewEl = document.getElementById('inputPreview');
+      const statusTitleEl = document.getElementById('statusTitle');
+      const statusTextEl = document.getElementById('statusText');
+
+      document.getElementById('reloadBtn').addEventListener('click', loadSavedStation);
+      document.getElementById('fillByCurrentLocationBtn').addEventListener('click', fillByCurrentLocation);
+      document.getElementById('saveBtn').addEventListener('click', saveStation);
+      stationInput.addEventListener('input', updatePreview);
+
+      loadSavedStation();
+
+      async function loadSavedStation() {
+        try {
+          setStatus('読み込み中', '保存ファイルから駅名を読んでいます。');
+          const response = await fetch('/api/himo/station');
+          const data = await parseApiResponse(response);
+          if (!response.ok) throw new Error(data.detail || data.error || '読み込みに失敗しました');
+
+          savedStationNameEl.textContent = data.stationName || '未設定';
+          savedStationMetaEl.textContent = data.updatedAt
+            ? `更新日時: ${new Date(data.updatedAt).toLocaleString('ja-JP')}`
+            : 'まだ更新されていません。';
+          filePathEl.textContent = data.filePath || '不明';
+
+          if (!stationInput.value.trim()) {
+            stationInput.value = data.stationName || '';
+            updatePreview();
+          }
+
+          setStatus('読み込み完了', '保存されている駅名を表示しています。');
+        } catch (error) {
+          console.error(error);
+          setStatus('エラー', error.message || '読み込みに失敗しました。');
+        }
+      }
+
+      async function fillByCurrentLocation() {
+        if (!navigator.geolocation) {
+          setStatus('エラー', 'このブラウザでは位置情報が使えません。');
+          return;
+        }
+
+        try {
+          setStatus('現在地を取得中', '位置情報の許可を確認してください。');
+          const position = await getCurrentPosition();
+
+          setStatus('最寄り駅を検索中', '現在地からいちばん近い駅を探しています。');
+          const response = await fetch('/api/google/nearest-station', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            })
+          });
+          const data = await parseApiResponse(response);
+          if (!response.ok) throw new Error(data.detail || data.error || '最寄り駅の取得に失敗しました');
+
+          stationInput.value = data.station.name;
+          updatePreview();
+          setStatus('フォームに入れました', `${data.station.name} を自動入力しました。必要なら自由に書き換えて更新してください。`);
+        } catch (error) {
+          console.error(error);
+          setStatus('エラー', error.message || '自動入力に失敗しました。');
+        }
+      }
+
+      async function saveStation() {
+        const stationName = stationInput.value.trim();
+        if (!stationName) {
+          setStatus('エラー', '駅名フォームが空です。');
+          return;
+        }
+
+        try {
+          setStatus('更新中', `${stationName} を保存ファイルに書き込んでいます。`);
+          const response = await fetch('/api/himo/station', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stationName })
+          });
+          const data = await parseApiResponse(response);
+          if (!response.ok) throw new Error(data.detail || data.error || '更新に失敗しました');
+
+          savedStationNameEl.textContent = data.stationName;
+          savedStationMetaEl.textContent = `更新日時: ${new Date(data.updatedAt).toLocaleString('ja-JP')}`;
+          filePathEl.textContent = data.filePath || '不明';
+          updatePreview();
+          setStatus('更新できました', `${data.stationName} を保存しました。画面の表示も最新になっています。`);
+        } catch (error) {
+          console.error(error);
+          setStatus('エラー', error.message || '更新に失敗しました。');
+        }
+      }
+
+      function updatePreview() {
+        inputPreviewEl.textContent = stationInput.value.trim() || 'まだ入力されていません。';
+      }
+
+      function setStatus(title, text) {
+        statusTitleEl.textContent = title;
+        statusTextEl.textContent = text;
+      }
+
+      function getCurrentPosition() {
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          });
+        });
+      }
+
+      async function parseApiResponse(response) {
+        const text = await response.text();
+        try {
+          return JSON.parse(text);
+        } catch {
+          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+            throw new Error('APIの代わりにHTMLが返っています。サーバー再起動後に試してください。');
+          }
+          throw new Error('APIレスポンスを読めませんでした。');
+        }
+      }
+    </script>
+  </body>
+</html>

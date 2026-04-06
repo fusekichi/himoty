@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yahoo 乗換 運賃テスト</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 860px; margin: 40px auto; padding: 0 16px; line-height: 1.7; color: #222; }
+      .card { border: 1px solid #ddd; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
+      label { display: block; font-weight: 600; margin-bottom: 8px; }
+      input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; margin-bottom: 14px; font-size: 16px; }
+      button { background: #39b22f; color: #fff; border: none; border-radius: 12px; padding: 14px 18px; font-size: 16px; cursor: pointer; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f6f6f6; padding: 12px; border-radius: 8px; white-space: pre-wrap; }
+      .ok { color: #0a7f2e; font-weight: bold; }
+      .err { color: #c5221f; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <h1>3. Yahoo 乗換 運賃テスト 💴</h1>
+    <div class="card">
+      <label for="from">出発駅</label>
+      <input id="from" type="text" value="恵比寿" placeholder="例: 恵比寿" />
+      <label for="to">到着駅</label>
+      <input id="to" type="text" value="渋谷" placeholder="例: 渋谷" />
+      <button id="searchBtn">運賃を取得する</button>
+    </div>
+    <div class="card">
+      <h2>結果</h2>
+      <div id="status">まだ実行していません</div>
+      <div id="result" class="mono"></div>
+    </div>
+    <script>
+      const statusEl = document.getElementById('status');
+      const resultEl = document.getElementById('result');
+      document.getElementById('searchBtn').addEventListener('click', async () => {
+        const from = document.getElementById('from').value.trim();
+        const to = document.getElementById('to').value.trim();
+        if (!from || !to) {
+          statusEl.innerHTML = '<span class="err">出発駅と到着駅を入力してください</span>';
+          return;
+        }
+        statusEl.textContent = 'Yahoo 乗換で運賃を取得中...';
+        resultEl.textContent = '';
+
+        const response = await fetch('/api/yahoo/fare', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from, to })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          statusEl.innerHTML = '<span class="err">エラー</span>';
+          resultEl.textContent = data.error || data.detail || '取得に失敗しました';
+          return;
+        }
+
+        statusEl.innerHTML = '<span class="ok">取得成功</span>';
+        resultEl.textContent = JSON.stringify(data, null, 2);
+      });
+    </script>
+  </body>
+</html>

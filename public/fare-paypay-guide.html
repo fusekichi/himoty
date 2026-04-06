@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ヒモティー ユーザー画面</title>
+    <style>
+      :root {
+        --bg: #fefce8;
+        --card: #ffffff;
+        --ink: #2f2a26;
+        --sub: #6b625b;
+        --line: #f1e3b8;
+        --green: #86efac;
+        --blue: #93c5fd;
+        --orange: #fdba74;
+        --red: #ef4444;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+        color: var(--ink);
+        background: linear-gradient(180deg, #fefce8 0%, #fffdf4 100%);
+      }
+      .wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 20px 14px 48px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #fde68a, #bfdbfe);
+        border-radius: 28px;
+        padding: 22px;
+        box-shadow: 0 12px 28px rgba(147, 197, 253, 0.18);
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 5vw, 38px);
+      }
+      .hero p {
+        margin: 0;
+        color: #5b524b;
+        line-height: 1.8;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .card {
+        background: var(--card);
+        border: 2px solid var(--line);
+        border-radius: 24px;
+        padding: 18px;
+        box-shadow: 0 10px 26px rgba(107, 98, 91, 0.08);
+      }
+      .card h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+      }
+      .station {
+        display: inline-block;
+        padding: 12px 16px;
+        border-radius: 999px;
+        background: #fff7d6;
+        font-size: 22px;
+        font-weight: 900;
+      }
+      .sub {
+        margin-top: 10px;
+        color: var(--sub);
+        line-height: 1.7;
+      }
+      .status {
+        margin-top: 16px;
+        background: #fffaf0;
+        border: 2px dashed #f1d7a8;
+        border-radius: 20px;
+        padding: 16px;
+      }
+      .status strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+      }
+      .status p {
+        margin: 0;
+        color: var(--sub);
+        line-height: 1.8;
+      }
+      .price {
+        margin-top: 16px;
+        padding: 18px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #86efac, #bfdbfe);
+      }
+      .price small {
+        display: block;
+        margin-bottom: 8px;
+        color: #38524d;
+      }
+      .price strong {
+        display: block;
+        font-size: clamp(36px, 8vw, 54px);
+        line-height: 1;
+      }
+      .price p {
+        margin: 10px 0 0;
+        color: #38524d;
+        line-height: 1.7;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      button, a.btn {
+        appearance: none;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 14px 18px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #2f2a26;
+      }
+      .copy-btn { background: linear-gradient(135deg, #fde68a, #fdba74); }
+      .paypay-btn { background: linear-gradient(135deg, #fca5a5, #ef4444); color: #fff; }
+      .reload-btn { background: #fff; border: 2px solid #f1e3b8; }
+      .copy-result {
+        margin-top: 10px;
+        font-size: 14px;
+        color: var(--sub);
+        min-height: 20px;
+      }
+      @media (max-width: 760px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="hero">
+        <h1>ヒモティー ユーザー画面</h1>
+        <p>開いたらすぐに、ヒモがいる駅と、あなたの最寄り駅を調べて、そのまま電車賃まで出します。表示はシンプルで、やることがすぐ分かる形にしています。</p>
+      </section>
+
+      <div class="grid">
+        <section class="card">
+          <h2>ヒモがいる駅</h2>
+          <div class="station" id="himoStation">読み込み中...</div>
+          <div class="sub" id="himoMeta">ファイルから読んでいます。</div>
+        </section>
+
+        <section class="card">
+          <h2>あなたの最寄り駅</h2>
+          <div class="station" id="userStation">検索中...</div>
+          <div class="sub" id="userMeta">最寄り駅を検索しています。</div>
+        </section>
+      </div>
+
+      <section class="card" style="margin-top:16px;">
+        <h2>いまの状況</h2>
+        <div class="status">
+          <strong id="statusTitle">準備中</strong>
+          <p id="statusText">画面が開いたので、まずヒモの駅を読み込んでいます。</p>
+        </div>
+
+        <div class="price">
+          <small>往復電車賃</small>
+          <strong id="roundTripFare">¥--</strong>
+          <p id="fareSummary">電車賃を算出しています。</p>
+        </div>
+
+        <div class="actions">
+          <button class="copy-btn" id="copyBtn">金額をコピー</button>
+          <a class="btn paypay-btn" href="https://paypay.ne.jp/guide/send/" target="_blank" rel="noopener noreferrer">PayPayリンク</a>
+          <button class="reload-btn" id="reloadBtn">再読み込み</button>
+        </div>
+        <div class="copy-result" id="copyResult"></div>
+      </section>
+    </div>
+
+    <script>
+      const himoStationEl = document.getElementById('himoStation');
+      const himoMetaEl = document.getElementById('himoMeta');
+      const userStationEl = document.getElementById('userStation');
+      const userMetaEl = document.getElementById('userMeta');
+      const statusTitleEl = document.getElementById('statusTitle');
+      const statusTextEl = document.getElementById('statusText');
+      const roundTripFareEl = document.getElementById('roundTripFare');
+      const fareSummaryEl = document.getElementById('fareSummary');
+      const copyResultEl = document.getElementById('copyResult');
+
+      let latestRoundTripFare = null;
+
+      document.getElementById('copyBtn').addEventListener('click', copyFare);
+      document.getElementById('reloadBtn').addEventListener('click', init);
+
+      init();
+
+      async function init() {
+        latestRoundTripFare = null;
+        copyResultEl.textContent = '';
+        roundTripFareEl.textContent = '¥--';
+        fareSummaryEl.textContent = '電車賃を算出しています。';
+        userStationEl.textContent = '検索中...';
+        userMetaEl.textContent = '最寄り駅を検索しています。';
+
+        try {
+          setStatus('ヒモの駅を読み込み中', '保存ファイルからヒモがいる駅を取得しています。');
+          const himoRes = await fetch('/api/himo/station');
+          const himoData = await parseApiResponse(himoRes);
+          if (!himoRes.ok) throw new Error(himoData.detail || himoData.error || 'ヒモの駅を取得できませんでした');
+
+          himoStationEl.textContent = himoData.stationName || '未設定';
+          himoMetaEl.textContent = himoData.updatedAt
+            ? `更新: ${new Date(himoData.updatedAt).toLocaleString('ja-JP')}`
+            : 'まだ更新されていません。';
+
+          if (!navigator.geolocation) {
+            throw new Error('このブラウザでは位置情報が使えません。');
+          }
+
+          setStatus('あなたの最寄り駅を検索しています', '現在地の近くにある駅を探しています。');
+          const position = await getCurrentPosition();
+          const nearestRes = await fetch('/api/google/nearest-station', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            })
+          });
+          const nearestData = await parseApiResponse(nearestRes);
+          if (!nearestRes.ok) throw new Error(nearestData.detail || nearestData.error || '最寄り駅を取得できませんでした');
+
+          userStationEl.textContent = nearestData.station.name || '不明';
+          userMetaEl.textContent = `${nearestData.station.address || '住所情報なし'} / 約${nearestData.station.distanceMeters}m`;
+
+          setStatus('電車賃を算出しています', `${nearestData.station.name} から ${himoData.stationName} の往復電車賃を計算しています。`);
+          const fareRes = await fetch('/api/yahoo/roundtrip-fare', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              from: nearestData.station.name,
+              to: himoData.stationName
+            })
+          });
+          const fareData = await parseApiResponse(fareRes);
+          if (!fareRes.ok) throw new Error(fareData.detail || fareData.error || '電車賃を取得できませんでした');
+
+          latestRoundTripFare = fareData.roundTripFare;
+          roundTripFareEl.textContent = formatYen(fareData.roundTripFare);
+          fareSummaryEl.textContent = `${nearestData.station.name} → ${himoData.stationName} の片道 ${formatYen(fareData.oneWayFare)} / 往復 ${formatYen(fareData.roundTripFare)} です。`;
+          setStatus('計算できました', '金額をコピーして、そのままPayPayへどうぞ。');
+        } catch (error) {
+          console.error(error);
+          setStatus('エラー', error.message || '処理に失敗しました。');
+          fareSummaryEl.textContent = '電車賃の算出に失敗しました。再読み込みでもう一度試してください。';
+        }
+      }
+
+      async function copyFare() {
+        if (!latestRoundTripFare) {
+          copyResultEl.textContent = 'まだ金額が出ていません。少し待ってください。';
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(String(latestRoundTripFare));
+          copyResultEl.textContent = `${latestRoundTripFare} をコピーしました。`;
+        } catch {
+          copyResultEl.textContent = `コピーできなかったので、${latestRoundTripFare} を手で入力してください。`;
+        }
+      }
+
+      function setStatus(title, text) {
+        statusTitleEl.textContent = title;
+        statusTextEl.textContent = text;
+      }
+
+      function getCurrentPosition() {
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          });
+        });
+      }
+
+      async function parseApiResponse(response) {
+        const text = await response.text();
+        try {
+          return JSON.parse(text);
+        } catch {
+          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+            throw new Error('APIの代わりにHTMLが返っています。サーバー再起動後に試してください。');
+          }
+          throw new Error('APIレスポンスを読めませんでした。');
+        }
+      }
+
+      function formatYen(value) {
+        return new Intl.NumberFormat('ja-JP', {
+          style: 'currency',
+          currency: 'JPY',
+          maximumFractionDigits: 0
+        }).format(Number(value || 0));
+      }
+    </script>
+  </body>
+</html>

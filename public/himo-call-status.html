@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ヒモを呼べる？</title>
+    <style>
+      :root {
+        --bg: #fdfcf7;
+        --ink: #3f342c;
+        --sub: #7c6d62;
+        --line: #f1dcc7;
+        --green: #86efac;
+        --red: #fca5a5;
+        --yellow: #fde68a;
+        --blue: #bfdbfe;
+        --card: #ffffff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+        background: linear-gradient(180deg, #fff8f1 0%, #fdfcf7 100%);
+        color: var(--ink);
+      }
+      .wrap {
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 22px 14px 48px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #fde68a, #bfdbfe);
+        border-radius: 30px;
+        padding: 24px;
+        box-shadow: 0 14px 30px rgba(191, 219, 254, 0.18);
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: clamp(30px, 6vw, 42px);
+      }
+      .hero p {
+        margin: 0;
+        line-height: 1.8;
+        color: #6a5c51;
+      }
+      .card {
+        margin-top: 16px;
+        background: var(--card);
+        border: 2px solid var(--line);
+        border-radius: 24px;
+        padding: 18px;
+        box-shadow: 0 10px 24px rgba(124, 109, 98, 0.08);
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 12px 16px;
+        border-radius: 999px;
+        font-size: 26px;
+        font-weight: 900;
+      }
+      .ok { background: #dcfce7; }
+      .ng { background: #fee2e2; }
+      .wait { background: #fef3c7; }
+      .title {
+        margin-top: 14px;
+        font-size: 24px;
+        font-weight: 900;
+      }
+      .desc {
+        margin-top: 8px;
+        color: var(--sub);
+        line-height: 1.8;
+      }
+      .mini-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .mini {
+        background: #fffaf2;
+        border: 2px dashed #f3dcc8;
+        border-radius: 18px;
+        padding: 14px;
+      }
+      .mini strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+      .mini div {
+        color: var(--sub);
+        line-height: 1.7;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      button, a.btn {
+        appearance: none;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 999px;
+        padding: 14px 18px;
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .reload-btn { background: linear-gradient(135deg, #fde68a, #fdba74); }
+      .back-btn { background: #fff; border: 2px solid var(--line); }
+      .busy-list {
+        margin: 14px 0 0;
+        padding-left: 18px;
+        color: var(--sub);
+        line-height: 1.8;
+      }
+      @media (max-width: 640px) {
+        .mini-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="hero">
+        <h1>ヒモを呼べる？</h1>
+        <p>Googleカレンダーを見て、いまから2時間スケジュールが空いているかを判定します。結果はシンプルに「呼べる / 呼べない」で出します。</p>
+      </section>
+
+      <section class="card">
+        <div class="status-badge wait" id="statusBadge">確認中...</div>
+        <div class="title" id="statusTitle">Googleカレンダーを確認しています</div>
+        <div class="desc" id="statusText">いまから2時間の予定を見ています。少し待ってください。</div>
+
+        <div class="mini-grid">
+          <div class="mini">
+            <strong>判定時間帯</strong>
+            <div id="timeRange">確認中...</div>
+          </div>
+          <div class="mini">
+            <strong>チェック時刻</strong>
+            <div id="checkedAt">確認中...</div>
+          </div>
+        </div>
+
+        <div class="mini" style="margin-top:12px;">
+          <strong>予定が入っている時間</strong>
+          <ul class="busy-list" id="busyList">
+            <li>確認中...</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button class="reload-btn" id="reloadBtn">もう一度チェックする</button>
+          <a class="btn back-btn" href="/">トップへ戻る</a>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const statusBadgeEl = document.getElementById('statusBadge');
+      const statusTitleEl = document.getElementById('statusTitle');
+      const statusTextEl = document.getElementById('statusText');
+      const timeRangeEl = document.getElementById('timeRange');
+      const checkedAtEl = document.getElementById('checkedAt');
+      const busyListEl = document.getElementById('busyList');
+
+      document.getElementById('reloadBtn').addEventListener('click', loadStatus);
+      loadStatus();
+
+      async function loadStatus() {
+        try {
+          setWaiting();
+          const response = await fetch('/api/calendar/call-status');
+          const data = await parseApiResponse(response);
+          if (!response.ok) {
+            throw new Error(data.detail || data.error || '空き確認に失敗しました');
+          }
+
+          renderResult(data);
+        } catch (error) {
+          console.error(error);
+          statusBadgeEl.className = 'status-badge ng';
+          statusBadgeEl.textContent = 'エラー';
+          statusTitleEl.textContent = '確認できませんでした';
+          statusTextEl.textContent = error.message || 'Googleカレンダーの設定を確認してください。';
+          timeRangeEl.textContent = '取得できませんでした';
+          checkedAtEl.textContent = '取得できませんでした';
+          busyListEl.innerHTML = '<li>予定情報を表示できませんでした。</li>';
+        }
+      }
+
+      function renderResult(data) {
+        statusBadgeEl.className = `status-badge ${data.canCall ? 'ok' : 'ng'}`;
+        statusBadgeEl.textContent = data.canCall ? '呼べる' : '呼べない';
+        statusTitleEl.textContent = data.canCall
+          ? 'いまならヒモを呼べます'
+          : 'いまはヒモを呼べません';
+        statusTextEl.textContent = data.message;
+        timeRangeEl.textContent = `${formatDateTime(data.timeMin)} 〜 ${formatDateTime(data.timeMax)}`;
+        checkedAtEl.textContent = formatDateTime(data.checkedAt);
+
+        if (!data.busy || data.busy.length === 0) {
+          busyListEl.innerHTML = '<li>この時間帯には予定が入っていません。</li>';
+          return;
+        }
+
+        busyListEl.innerHTML = data.busy
+          .map(item => `<li>${formatDateTime(item.start)} 〜 ${formatDateTime(item.end)}</li>`)
+          .join('');
+      }
+
+      function setWaiting() {
+        statusBadgeEl.className = 'status-badge wait';
+        statusBadgeEl.textContent = '確認中...';
+        statusTitleEl.textContent = 'Googleカレンダーを確認しています';
+        statusTextEl.textContent = 'いまから2時間の予定を見ています。少し待ってください。';
+        timeRangeEl.textContent = '確認中...';
+        checkedAtEl.textContent = '確認中...';
+        busyListEl.innerHTML = '<li>確認中...</li>';
+      }
+
+      async function parseApiResponse(response) {
+        const text = await response.text();
+        try {
+          return JSON.parse(text);
+        } catch {
+          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+            throw new Error('APIの代わりにHTMLが返っています。サーバー再起動後に試してください。');
+          }
+          throw new Error('APIレスポンスを読めませんでした。');
+        }
+      }
+
+      function formatDateTime(value) {
+        return new Date(value).toLocaleString('ja-JP', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+    </script>
+  </body>
+</html>
