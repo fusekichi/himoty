@@ -8,6 +8,7 @@ const yahooFareRouter = require('./routes/yahoo-fare');
 const himoStationRouter = require('./routes/himo-station');
 const googleCalendarRouter = require('./routes/google-calendar');
 const lineWebhookRouter = require('./routes/line-webhook');
+const himoCallRequestRouter = require('./routes/himo-call-request');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,7 @@ app.use('/api/google', googleMapsRouter);
 app.use('/api/yahoo', yahooFareRouter);
 app.use('/api/himo', himoStationRouter);
 app.use('/api/calendar', googleCalendarRouter);
+app.use('/api/himo/call-request', himoCallRequestRouter);
 
 // 5) health check
 app.get('/api/health', (_req, res) => {

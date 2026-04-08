@@ -11,17 +11,12 @@
       --shell: rgba(255,255,255,.78);
       --shell-line: rgba(221,233,214,.95);
       --text: #111111;
-      --muted: #6f786b;
       --line: #dbe9d4;
-      --line-strong: #cadfbe;
-      --mint-1: #eef7e7;
-      --mint-2: #e3f1d8;
       --teal-1: #f6fbf9;
       --teal-2: #eaf7f3;
       --teal-3: #d7efe6;
       --shadow-shell: 0 22px 50px rgba(96, 118, 82, 0.12);
       --shadow-card: 0 16px 34px rgba(103, 123, 89, 0.08);
-      --shadow-pill: 0 10px 24px rgba(111, 132, 91, 0.10);
       --radius-shell: 38px;
       --radius-pill: 999px;
       --paypay: #ff2344;
@@ -29,6 +24,9 @@
       --danger-bg: #fff4f2;
       --danger-line: #f0ccc6;
       --danger-text: #8e4f45;
+      --success-bg: #f3fbef;
+      --success-line: #d8eac9;
+      --success-text: #4d6d47;
     }
 
     * { box-sizing: border-box; }
@@ -51,16 +49,6 @@
     .phone {
       width: 100%;
       max-width: var(--maxw);
-    }
-
-    .statusbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 8px 10px;
-      font-size: 12px;
-      color: #41503b;
-      opacity: .8;
     }
 
     .app {
@@ -102,22 +90,10 @@
       background: rgba(255, 255, 255, 0.98);
     }
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
     .brand__logo {
       width: 100px;
       object-fit: contain;
       display: block;
-    }
-
-    .brand__title {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: 0.03em;
     }
 
     .content {
@@ -139,26 +115,27 @@
       letter-spacing: .02em;
     }
 
-    .intro__lead {
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.82;
-      font-weight: 700;
-      letter-spacing: .01em;
-    }
-
-    .error-box {
+    .error-box,
+    .success-box {
       display: none;
       margin: 0 0 12px;
       padding: 12px 14px;
       border-radius: 18px;
-      background: var(--danger-bg);
-      border: 1px solid var(--danger-line);
-      color: var(--danger-text);
       font-size: 13px;
       line-height: 1.6;
       font-weight: 700;
+    }
+
+    .error-box {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-line);
+      color: var(--danger-text);
+    }
+
+    .success-box {
+      background: var(--success-bg);
+      border: 1px solid var(--success-line);
+      color: var(--success-text);
     }
 
     .summary {
@@ -166,14 +143,6 @@
       gap: 12px;
       margin-bottom: 14px;
       margin-top: 14px;
-    }
-
-    .stations-arrow {
-      text-align: center;
-      color: #9aad8e;
-      font-weight: 900;
-      font-size: 16px;
-      transform: translateY(1px);
     }
 
     .fare-pill-wrap {
@@ -208,7 +177,7 @@
     .visual-card {
       position: relative;
       overflow: hidden;
-      min-height: 150px;
+      min-height: 166px;
       border-radius: 28px;
       border: 1px solid rgba(214, 233, 224, 0.95);
       background:
@@ -219,30 +188,9 @@
       padding: 0 14px 18px;
     }
 
-    .visual-card::before {
-      content: "";
-      position: absolute;
-      inset: 18px auto auto 18px;
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,.65) 0%, rgba(255,255,255,0) 72%);
-      pointer-events: none;
-    }
-
-    .visual-card::after {
-      content: "";
-      position: absolute;
-      inset: auto -18px 0 auto;
-      width: 160px;
-      height: 120px;
-      background: radial-gradient(circle, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 72%);
-      pointer-events: none;
-    }
-
     .route-scene {
       position: relative;
-      height: 180px;
+      height: 186px;
     }
 
     .route-scene__line {
@@ -254,7 +202,6 @@
       border-radius: 999px;
       background: linear-gradient(90deg, #8fc46d 0%, #7bb15f 100%);
       transform: rotate(-12deg);
-      transform-origin: center;
       box-shadow: 0 3px 10px rgba(116, 165, 88, 0.16);
     }
 
@@ -262,6 +209,7 @@
     .route-scene__line::after {
       content: "";
       position: absolute;
+      top: 50%;
       width: 16px;
       height: 16px;
       margin-top: -8px;
@@ -280,28 +228,32 @@
       top: 40.5%;
       width: 69px;
       object-fit: contain;
-      transform: translate(-50%, -50%) rotate(0deg);
+      transform: translate(-50%, -50%);
       filter: drop-shadow(0 12px 18px rgba(85, 105, 71, 0.14));
       z-index: 3;
     }
 
     .route-scene__station-tag {
       position: absolute;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.78);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      padding: 8px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.82);
       border: 1px solid rgba(217,233,224,.96);
-      font-size: 18px;
-      font-weight: 800;
       box-shadow: 0 8px 16px rgba(109, 126, 95, 0.06);
       backdrop-filter: blur(8px);
+      z-index: 4;
+      max-width: 46%;
     }
 
     .route-scene__station-tag::before {
       content: "";
+      position: absolute;
+      left: 10px;
+      top: 12px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -309,8 +261,23 @@
       box-shadow: 0 0 0 3px rgba(132,190,103,.12);
     }
 
-    .route-scene__station-tag--left { left: 0; bottom: -10px; }
-    .route-scene__station-tag--right { right: 0px; top: 18px; }
+    .route-scene__station-tag--left { left: 0; bottom: -8px; }
+    .route-scene__station-tag--right { right: 0; top: 18px; }
+
+    .route-scene__station-label {
+      padding-left: 16px;
+      font-size: 11px;
+      line-height: 1.35;
+      color: #688063;
+      font-weight: 800;
+    }
+
+    .route-scene__station-name {
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 900;
+      word-break: break-word;
+    }
 
     .status-mini {
       margin-top: 14px;
@@ -322,6 +289,7 @@
       line-height: 1.7;
       font-weight: 700;
       text-align: center;
+      color: #5f6d59;
     }
 
     .actions {
@@ -334,9 +302,9 @@
     .cta {
       width: 100%;
       min-height: 58px;
-      border: 1.5px solid #cfe1c4;
+      border: 1.5px solid #74c964;
       border-radius: var(--radius-pill);
-      background: linear-gradient(180deg, #80ff72 0%, #7dcf66 100%);
+      background: linear-gradient(180deg, #8fff80 0%, #7dd467 100%);
       color: var(--text);
       font-size: 17px;
       font-weight: 900;
@@ -373,6 +341,15 @@
       flex: none;
     }
 
+    .footer-note {
+      max-width: 320px;
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.75;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
     .secondary-actions {
       display: flex;
       gap: 8px;
@@ -393,44 +370,34 @@
       cursor: pointer;
     }
 
-    .footer-note {
-      max-width: 320px;
-      text-align: center;
-      font-size: 15px;
-      line-height: 1.75;
-      font-weight: 700;
-      letter-spacing: .01em;
-    }
-
-    .is-loading,
     .is-loading .fare-pill__amount,
-    .is-loading {
+    .is-loading .route-scene__station-name,
+    .is-loading .status-mini {
       opacity: .55;
     }
 
     @media (max-width: 390px) {
       .content { padding-left: 16px; padding-right: 16px; }
       .intro__title { font-size: 28px; }
-      .intro__lead { font-size: 13px; }
-      .visual-card { min-height: 150px; }
-      .route-scene { height: 180px; }
-      .route-scene__mascot { width: 69px; }
+      .visual-card { min-height: 160px; }
+      .route-scene { height: 182px; }
+      .route-scene__mascot { width: 66px; }
+      .route-scene__station-name { font-size: 15px; }
       .cta { min-height: 56px; font-size: 16px; }
     }
   </style>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
   <div class="phone">
-
     <div class="app" id="appRoot">
       <header class="header">
-        <div class="brand">
-          <img class="brand__logo" id="brandLogo" src="./himoty_logo.jpg" alt="ヒモティ" />
-        </div>
+        <img class="brand__logo" id="brandLogo" src="./himoty_logo.jpg" alt="ヒモティ" />
       </header>
 
       <main class="content">
         <div class="error-box" id="errorBox"></div>
+        <div class="success-box" id="successBox"></div>
 
         <section class="intro">
           <h1 class="intro__title">今すぐヒモを呼ぶ</h1>
@@ -440,12 +407,16 @@
           <div class="route-scene">
             <div class="route-scene__line"></div>
             <img id="routeMascot" class="route-scene__mascot" src="./himoty_train.jpg" alt="移動中のヒモキャラクター" />
+
             <div class="route-scene__station-tag route-scene__station-tag--left">
-                <span>ヒモのいる駅</span>
-                <br>
-                <span id="fromStationTag">ヒモの駅</span>
+              <span class="route-scene__station-label">ヒモがいる駅</span>
+              <span class="route-scene__station-name" id="fromStationTag">読込中…</span>
             </div>
-            <div class="route-scene__station-tag route-scene__station-tag--right" id="toStationTag">あなたの駅</div>
+
+            <div class="route-scene__station-tag route-scene__station-tag--right">
+              <span class="route-scene__station-label">あなたがいる駅</span>
+              <span class="route-scene__station-name" id="toStationTag">読込中…</span>
+            </div>
           </div>
         </section>
 
@@ -458,7 +429,7 @@
           </div>
         </section>
 
-        <div class="status-mini" id="statusMini">位置情報の利用を許可すると、最寄り駅と往復交通費を表示します。</div>
+        <div class="status-mini" id="statusMini">位置情報の利用とLINEログイン確認後に、最寄り駅と往復交通費を表示します。</div>
 
         <section class="actions">
           <button id="callButton" class="cta" type="button" disabled>
@@ -484,8 +455,9 @@
         himoStationApiUrl: window.HIMOTY_STATION_API_URL || '/api/himo/station',
         nearestStationApiUrl: window.HIMOTY_NEAREST_STATION_API_URL || '/api/google/nearest-station',
         fareApiUrl: window.HIMOTY_FARE_API_URL || '/api/yahoo/roundtrip-fare',
-        paypayUrl: window.HIMOTY_PAYPAY_URL || 'https://qr.paypay.ne.jp/p2p01_FlsHkbzWa41BKLeJ',
-        footerNote: window.HIMOTY_FOOTER_NOTE || "※まだ確定はしません。ヒモが気づいたらすぐ連絡します。",
+        callRequestApiUrl: window.HIMOTY_CALL_REQUEST_API_URL || '/api/himo/call-request',
+        footerNote: window.HIMOTY_FOOTER_NOTE || '※まだ確定はしません。ヒモが気づいたらすぐ連絡します。',
+        liffId: window.HIMOTY_LIFF_ID || '',
         fetchTimeoutMs: Number(window.HIMOTY_FETCH_TIMEOUT_MS || 12000),
         geoTimeoutMs: Number(window.HIMOTY_GEO_TIMEOUT_MS || 12000),
         fallbackFromStation: window.HIMOTY_FROM_STATION || '渋谷駅'
@@ -503,11 +475,15 @@
         callButtonLabel: document.getElementById('callButtonLabel'),
         reloadBtn: document.getElementById('reloadBtn'),
         footerNote: document.getElementById('footerNote'),
-        errorBox: document.getElementById('errorBox')
+        errorBox: document.getElementById('errorBox'),
+        successBox: document.getElementById('successBox')
       };
 
       let latestRoundTripFare = null;
-      let currentPayload = null;
+      let latestHimoStationName = CONFIG.fallbackFromStation;
+      let latestUserStationName = '';
+      let requesterDisplayName = '';
+      let requesterLineUserId = '';
       let isLoading = false;
 
       function formatYen(value) {
@@ -518,13 +494,39 @@
         }).format(Number(value || 0));
       }
 
+      function formatAmountYenText(value) {
+        return new Intl.NumberFormat('ja-JP', {
+          maximumFractionDigits: 0
+        }).format(Number(value || 0)) + '円';
+      }
+
+      function formatDateTimeJP(date) {
+        const value = date instanceof Date ? date : new Date(date);
+        const month = value.getMonth() + 1;
+        const day = value.getDate();
+        const hours = String(value.getHours()).padStart(2, '0');
+        const minutes = String(value.getMinutes()).padStart(2, '0');
+        return month + '月' + day + '日 ' + hours + '時' + minutes + '分';
+      }
+
+      function canSubmit() {
+        return Boolean(!isLoading && latestRoundTripFare && requesterLineUserId && requesterDisplayName);
+      }
+
+      function refreshCallButtonState() {
+        refs.callButton.disabled = !canSubmit();
+        if (isLoading) {
+          refs.callButtonLabel.textContent = '計算中…';
+          return;
+        }
+        refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+      }
+
       function setLoading(flag) {
         isLoading = flag;
         refs.appRoot.classList.toggle('is-loading', flag);
         refs.reloadBtn.disabled = flag;
-        refs.callButton.disabled = flag || !latestRoundTripFare;
-        if (flag) refs.callButtonLabel.textContent = '計算中…';
-        else refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+        refreshCallButtonState();
       }
 
       function setStatus(text) {
@@ -541,7 +543,19 @@
         refs.errorBox.textContent = text;
       }
 
+      function showSuccess(text) {
+        if (!text) {
+          refs.successBox.style.display = 'none';
+          refs.successBox.textContent = '';
+          return;
+        }
+        refs.successBox.style.display = 'block';
+        refs.successBox.textContent = text;
+      }
+
       async function fetchJson(url, options, timeoutMs) {
+        if (!url) throw new Error('API URL が未設定です。');
+
         const controller = new AbortController();
         const timer = setTimeout(function () {
           controller.abort();
@@ -554,8 +568,9 @@
           });
           const text = await response.text();
           let data;
+
           try {
-            data = JSON.parse(text);
+            data = text ? JSON.parse(text) : {};
           } catch (error) {
             if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
               throw new Error('APIの代わりにHTMLが返っています。サーバー側のルーティング確認が必要です。');
@@ -621,13 +636,35 @@
         });
       }
 
+      async function initLiffProfile() {
+        if (!CONFIG.liffId) {
+          throw new Error('LIFF ID が未設定です。');
+        }
+        if (!window.liff) {
+          throw new Error('LIFF SDK の読込に失敗しました。');
+        }
+
+        await window.liff.init({ liffId: CONFIG.liffId });
+
+        if (!window.liff.isLoggedIn()) {
+          window.liff.login({ redirectUri: window.location.href });
+          throw new Error('LINEログインへ移動しています。ログイン後に再度お試しください。');
+        }
+
+        const profile = await window.liff.getProfile();
+        requesterDisplayName = profile && profile.displayName ? profile.displayName : '';
+        requesterLineUserId = profile && profile.userId ? profile.userId : '';
+
+        if (!requesterDisplayName || !requesterLineUserId) {
+          throw new Error('LINEプロフィール取得に失敗しました。');
+        }
+      }
+
       function normalizeHimoStation(payload) {
         const root = payload && typeof payload === 'object' ? payload : {};
         const station = root.station && typeof root.station === 'object' ? root.station : root;
         return {
-          stationName: station.stationName || station.name || CONFIG.fallbackFromStation,
-          updatedAt: root.updatedAt || station.updatedAt || '',
-          raw: root
+          stationName: station.stationName || station.name || CONFIG.fallbackFromStation
         };
       }
 
@@ -635,19 +672,14 @@
         const root = payload && typeof payload === 'object' ? payload : {};
         const station = root.station && typeof root.station === 'object' ? root.station : root;
         return {
-          name: station.name || station.stationName || '',
-          address: station.address || '',
-          distanceMeters: Number(station.distanceMeters || station.distance || 0) || 0,
-          raw: root
+          name: station.name || station.stationName || ''
         };
       }
 
       function normalizeFare(payload) {
         const root = payload && typeof payload === 'object' ? payload : {};
         return {
-          oneWayFare: Number(root.oneWayFare || root.fare || 0) || 0,
-          roundTripFare: Number(root.roundTripFare || root.totalFare || 0) || 0,
-          raw: root
+          roundTripFare: Number(root.roundTripFare || root.totalFare || 0) || 0
         };
       }
 
@@ -658,38 +690,31 @@
       }
 
       function renderHimoStation(himo) {
-        refs.fromStationTag.textContent = himo.stationName || CONFIG.fallbackFromStation;
+        latestHimoStationName = himo.stationName || CONFIG.fallbackFromStation;
+        refs.fromStationTag.textContent = latestHimoStationName;
       }
 
       function renderNearestStation(nearest) {
-        refs.toStationTag.textContent = nearest.name || '読込中…';
-        const distanceText = nearest.distanceMeters ? ('約' + nearest.distanceMeters + 'm') : '距離不明';
+        latestUserStationName = nearest.name || '';
+        refs.toStationTag.textContent = nearest.name || '取得失敗';
       }
 
       function renderFare(fare, nearestName, himoName) {
         latestRoundTripFare = fare.roundTripFare || null;
-        currentPayload = {
-          from: nearestName,
-          to: himoName,
-          oneWayFare: fare.oneWayFare,
-          roundTripFare: fare.roundTripFare
-        };
-
         refs.roundTripFare.textContent = formatYen(fare.roundTripFare);
-        setStatus('電車賃を送るとヒモが来ます');
-        refs.callButton.disabled = false;
-        refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+        setStatus(nearestName + ' から ' + himoName + ' までの往復交通費です。');
+        refreshCallButtonState();
       }
 
       function resetForLoading() {
         latestRoundTripFare = null;
-        currentPayload = null;
+        latestUserStationName = '';
+        latestHimoStationName = CONFIG.fallbackFromStation;
         refs.roundTripFare.textContent = '¥--';
         refs.fromStationTag.textContent = '読込中…';
         refs.toStationTag.textContent = '読込中…';
-        setStatus('位置情報の利用を許可すると、最寄り駅と往復交通費を表示します。');
-        refs.callButton.disabled = true;
-        refs.callButtonLabel.textContent = '計算中…';
+        setStatus('位置情報の利用とLINEログイン確認後に、最寄り駅と往復交通費を表示します。');
+        refreshCallButtonState();
       }
 
       async function init() {
@@ -698,14 +723,17 @@
         resetForLoading();
         setLoading(true);
         showError('');
+        showSuccess('');
 
         try {
-          setStatus('ヒモの駅と現在地を確認しています。');
+          setStatus('LINEログインと位置情報を確認しています。');
+          const [profileResult, himoPayload, position] = await Promise.all([
+            initLiffProfile(),
+            fetchJson(CONFIG.himoStationApiUrl),
+            getCurrentPositionSafe()
+          ]);
 
-          const himoPromise = fetchJson(CONFIG.himoStationApiUrl);
-          const positionPromise = getCurrentPositionSafe();
-
-          const [himoPayload, position] = await Promise.all([himoPromise, positionPromise]);
+          void profileResult;
           const himo = normalizeHimoStation(himoPayload);
           renderHimoStation(himo);
 
@@ -741,45 +769,61 @@
           }
 
           renderFare(fare, nearest.name, himo.stationName);
-          console.log('金額まで計算できました。内容を確認して進めます。');
         } catch (error) {
           console.error(error);
           showError(error.message || '読込に失敗しました。');
-          setStatus('読込に失敗しました。位置情報の許可とAPIの応答を確認して、再読み込みしてください。');
-          refs.callButton.disabled = true;
-          refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+          setStatus('読込に失敗しました。位置情報の許可・LIFF設定・API応答を確認してください。');
         } finally {
           setLoading(false);
+          refreshCallButtonState();
         }
       }
 
-      async function copyFare() {
-        if (!latestRoundTripFare) {
-          showInfo('まだ金額が出ていません。読込完了まで少し待ってください。');
+      async function submitCallRequest() {
+        if (!canSubmit()) {
+          setStatus('LINEプロフィール・駅・交通費の取得完了を待ってください。');
           return;
         }
+
+        showError('');
+        showSuccess('');
+        refs.callButton.disabled = true;
+        refs.callButtonLabel.textContent = '送信中…';
 
         try {
-          await navigator.clipboard.writeText(String(latestRoundTripFare));
-          showInfo(String(latestRoundTripFare) + ' をコピーしました。');
+          const now = new Date();
+          const requestedAtLabel = formatDateTimeJP(now);
+          const payload = {
+            requestedAt: now.toISOString(),
+            requestedAtLabel: requestedAtLabel,
+            himoStation: latestHimoStationName,
+            userStation: latestUserStationName,
+            roundTripFare: Number(latestRoundTripFare),
+            requesterDisplayName: requesterDisplayName,
+            requesterLineUserId: requesterLineUserId,
+            source: 'fare-paypay-guide'
+          };
+
+          const result = await fetchJson(CONFIG.callRequestApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          refs.callButtonLabel.textContent = '送信しました';
+          setStatus('予約者本人と星野さんのLINEに通知を送りました。');
+          showSuccess((result && result.message) || 'LINE通知を送信しました。');
         } catch (error) {
-          showInfo('コピーできなかったので、' + String(latestRoundTripFare) + ' を手入力してください。');
-        }
-      }
-
-      function openPayPay() {
-        if (!latestRoundTripFare) {
-          showInfo('先に交通費の計算完了を待ってください。');
-          return;
-        }
-
-        if (CONFIG.paypayUrl) {
-          window.open(CONFIG.paypayUrl, '_blank', 'noopener');
+          console.error(error);
+          showError(error.message || '呼び出し送信に失敗しました。');
+          setStatus('呼び出し送信に失敗しました。API設定を確認してください。');
+          refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+          refreshCallButtonState();
         }
       }
 
       refs.reloadBtn.addEventListener('click', init);
-      refs.callButton.addEventListener('click', openPayPay);
+      refs.callButton.addEventListener('click', submitCallRequest);
 
       renderBase();
       init();
