@@ -1,312 +1,514 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ヒモティー ユーザー画面</title>
-    <style>
-      :root {
-        --bg: #fefce8;
-        --card: #ffffff;
-        --ink: #2f2a26;
-        --sub: #6b625b;
-        --line: #f1e3b8;
-        --green: #86efac;
-        --blue: #93c5fd;
-        --orange: #fdba74;
-        --red: #ef4444;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
-        color: var(--ink);
-        background: linear-gradient(180deg, #fefce8 0%, #fffdf4 100%);
-      }
-      .wrap {
-        max-width: 920px;
-        margin: 0 auto;
-        padding: 20px 14px 48px;
-      }
-      .hero {
-        background: linear-gradient(135deg, #fde68a, #bfdbfe);
-        border-radius: 28px;
-        padding: 22px;
-        box-shadow: 0 12px 28px rgba(147, 197, 253, 0.18);
-      }
-      .hero h1 {
-        margin: 0 0 8px;
-        font-size: clamp(28px, 5vw, 38px);
-      }
-      .hero p {
-        margin: 0;
-        color: #5b524b;
-        line-height: 1.8;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-top: 16px;
-      }
-      .card {
-        background: var(--card);
-        border: 2px solid var(--line);
-        border-radius: 24px;
-        padding: 18px;
-        box-shadow: 0 10px 26px rgba(107, 98, 91, 0.08);
-      }
-      .card h2 {
-        margin: 0 0 12px;
-        font-size: 20px;
-      }
-      .station {
-        display: inline-block;
-        padding: 12px 16px;
-        border-radius: 999px;
-        background: #fff7d6;
-        font-size: 22px;
-        font-weight: 900;
-      }
-      .sub {
-        margin-top: 10px;
-        color: var(--sub);
-        line-height: 1.7;
-      }
-      .status {
-        margin-top: 16px;
-        background: #fffaf0;
-        border: 2px dashed #f1d7a8;
-        border-radius: 20px;
-        padding: 16px;
-      }
-      .status strong {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 16px;
-      }
-      .status p {
-        margin: 0;
-        color: var(--sub);
-        line-height: 1.8;
-      }
-      .price {
-        margin-top: 16px;
-        padding: 18px;
-        border-radius: 22px;
-        background: linear-gradient(135deg, #86efac, #bfdbfe);
-      }
-      .price small {
-        display: block;
-        margin-bottom: 8px;
-        color: #38524d;
-      }
-      .price strong {
-        display: block;
-        font-size: clamp(36px, 8vw, 54px);
-        line-height: 1;
-      }
-      .price p {
-        margin: 10px 0 0;
-        color: #38524d;
-        line-height: 1.7;
-      }
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 16px;
-      }
-      button, a.btn {
-        appearance: none;
-        border: none;
-        cursor: pointer;
-        text-decoration: none;
-        border-radius: 999px;
-        padding: 14px 18px;
-        font-size: 15px;
-        font-weight: 800;
-        color: #2f2a26;
-      }
-      .copy-btn { background: linear-gradient(135deg, #fde68a, #fdba74); }
-      .paypay-btn { background: linear-gradient(135deg, #fca5a5, #ef4444); color: #fff; }
-      .reload-btn { background: #fff; border: 2px solid #f1e3b8; }
-      .copy-result {
-        margin-top: 10px;
-        font-size: 14px;
-        color: var(--sub);
-        min-height: 20px;
-      }
-      @media (max-width: 760px) {
-        .grid { grid-template-columns: 1fr; }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <section class="hero">
-        <h1>ヒモティー ユーザー画面</h1>
-        <p>開いたらすぐに、ヒモがいる駅と、あなたの最寄り駅を調べて、そのまま電車賃まで出します。表示はシンプルで、やることがすぐ分かる形にしています。</p>
-      </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ヒモティー | ヒモを呼ぶ</title>
+  <style>
+    :root {
+      --bg-1: #f2f8ee;
+      --bg-2: #fbfdf9;
+      --shell: rgba(255,255,255,.78);
+      --shell-line: rgba(221,233,214,.95);
+      --text: #111111;
+      --muted: #6f786b;
+      --line: #dbe9d4;
+      --line-strong: #cadfbe;
+      --mint-1: #eef7e7;
+      --mint-2: #e3f1d8;
+      --teal-1: #f6fbf9;
+      --teal-2: #eaf7f3;
+      --teal-3: #d7efe6;
+      --shadow-shell: 0 22px 50px rgba(96, 118, 82, 0.12);
+      --shadow-card: 0 16px 34px rgba(103, 123, 89, 0.08);
+      --shadow-pill: 0 10px 24px rgba(111, 132, 91, 0.10);
+      --radius-shell: 38px;
+      --radius-pill: 999px;
+      --paypay: #ff2344;
+      --maxw: 430px;
+      --danger-bg: #fff4f2;
+      --danger-line: #f0ccc6;
+      --danger-text: #8e4f45;
+    }
 
-      <div class="grid">
-        <section class="card">
-          <h2>ヒモがいる駅</h2>
-          <div class="station" id="himoStation">読み込み中...</div>
-          <div class="sub" id="himoMeta">ファイルから読んでいます。</div>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+      font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, var(--bg-1) 0%, #f7fbf4 35%, var(--bg-2) 100%);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 18px 14px 34px;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: var(--maxw);
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 8px 10px;
+      font-size: 12px;
+      color: #41503b;
+      opacity: .8;
+    }
+
+    .app {
+      position: relative;
+      background: var(--shell);
+      border: 1px solid var(--shell-line);
+      border-radius: var(--radius-shell);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-shell);
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -50px auto auto -60px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(224, 239, 210, 0.72) 0%, rgba(224, 239, 210, 0) 72%);
+      pointer-events: none;
+    }
+
+    .app::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -70px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(213, 235, 222, 0.55) 0%, rgba(213, 235, 222, 0) 72%);
+      pointer-events: none;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 18px 10px 1px;
+      background: rgba(255, 255, 255, 0.98);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand__logo {
+      width: 100px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand__title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      padding: 6px 18px 24px;
+    }
+
+    .intro {
+      text-align: center;
+      padding: 6px 2px 14px;
+    }
+
+    .intro__title {
+      margin: 0;
+      font-size: 31px;
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: .02em;
+    }
+
+    .intro__lead {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.82;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
+    .error-box {
+      display: none;
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-line);
+      color: var(--danger-text);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .summary {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+      margin-top: 14px;
+    }
+
+    .stations-arrow {
+      text-align: center;
+      color: #9aad8e;
+      font-weight: 900;
+      font-size: 16px;
+      transform: translateY(1px);
+    }
+
+    .fare-pill-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .fare-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 11px 18px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(180deg, #ffffff 0%, #f4faef 100%);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 22px rgba(104, 123, 92, 0.08);
+      font-weight: 900;
+    }
+
+    .fare-pill__small {
+      color: #667161;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .fare-pill__amount {
+      font-size: 17px;
+      letter-spacing: .01em;
+    }
+
+    .visual-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 150px;
+      border-radius: 28px;
+      border: 1px solid rgba(214, 233, 224, 0.95);
+      background:
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,.92) 0%, rgba(255,255,255,0) 28%),
+        radial-gradient(circle at 82% 18%, rgba(217,240,231,.55) 0%, rgba(217,240,231,0) 35%),
+        linear-gradient(180deg, var(--teal-1) 0%, var(--teal-2) 55%, var(--teal-3) 100%);
+      box-shadow: var(--shadow-card);
+      padding: 0 14px 18px;
+    }
+
+    .visual-card::before {
+      content: "";
+      position: absolute;
+      inset: 18px auto auto 18px;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.65) 0%, rgba(255,255,255,0) 72%);
+      pointer-events: none;
+    }
+
+    .visual-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -18px 0 auto;
+      width: 160px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 72%);
+      pointer-events: none;
+    }
+
+    .route-scene {
+      position: relative;
+      height: 180px;
+    }
+
+    .route-scene__line {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      top: 54%;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #8fc46d 0%, #7bb15f 100%);
+      transform: rotate(-12deg);
+      transform-origin: center;
+      box-shadow: 0 3px 10px rgba(116, 165, 88, 0.16);
+    }
+
+    .route-scene__line::before,
+    .route-scene__line::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin-top: -8px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 4px solid #7fb666;
+      box-shadow: 0 4px 12px rgba(113, 145, 91, 0.10);
+    }
+
+    .route-scene__line::before { left: -8px; }
+    .route-scene__line::after { right: -8px; }
+
+    .route-scene__mascot {
+      position: absolute;
+      left: 50%;
+      top: 40.5%;
+      width: 69px;
+      object-fit: contain;
+      transform: translate(-50%, -50%) rotate(0deg);
+      filter: drop-shadow(0 12px 18px rgba(85, 105, 71, 0.14));
+      z-index: 3;
+    }
+
+    .route-scene__station-tag {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(217,233,224,.96);
+      font-size: 18px;
+      font-weight: 800;
+      box-shadow: 0 8px 16px rgba(109, 126, 95, 0.06);
+      backdrop-filter: blur(8px);
+    }
+
+    .route-scene__station-tag::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #84be67;
+      box-shadow: 0 0 0 3px rgba(132,190,103,.12);
+    }
+
+    .route-scene__station-tag--left { left: 0; bottom: -10px; }
+    .route-scene__station-tag--right { right: 0px; top: 18px; }
+
+    .status-mini {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.76);
+      border: 1px solid rgba(217,233,224,.96);
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+      justify-items: center;
+    }
+
+    .cta {
+      width: 100%;
+      min-height: 58px;
+      border: 1.5px solid #cfe1c4;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(180deg, #80ff72 0%, #7dcf66 100%);
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 14px 26px rgba(104, 123, 89, 0.08);
+      cursor: pointer;
+      transition: opacity .15s ease, transform .1s ease;
+    }
+
+    .cta[disabled] {
+      opacity: .62;
+      cursor: wait;
+    }
+
+    .cta:active { transform: translateY(1px); }
+
+    .paypay-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      background: var(--paypay);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 8px 14px rgba(255, 35, 68, 0.18);
+      flex: none;
+    }
+
+    .secondary-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .subbtn {
+      appearance: none;
+      border: 1px solid #d8e6d0;
+      background: rgba(255,255,255,.9);
+      color: #5d6d58;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .footer-note {
+      max-width: 320px;
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.75;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
+    .is-loading,
+    .is-loading .fare-pill__amount,
+    .is-loading {
+      opacity: .55;
+    }
+
+    @media (max-width: 390px) {
+      .content { padding-left: 16px; padding-right: 16px; }
+      .intro__title { font-size: 28px; }
+      .intro__lead { font-size: 13px; }
+      .visual-card { min-height: 150px; }
+      .route-scene { height: 180px; }
+      .route-scene__mascot { width: 69px; }
+      .cta { min-height: 56px; font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+
+    <div class="app" id="appRoot">
+      <header class="header">
+        <div class="brand">
+          <img class="brand__logo" id="brandLogo" src="./himoty_logo.jpg" alt="ヒモティ" />
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="error-box" id="errorBox"></div>
+
+        <section class="intro">
+          <h1 class="intro__title">今すぐヒモを呼ぶ</h1>
         </section>
 
-        <section class="card">
-          <h2>あなたの最寄り駅</h2>
-          <div class="station" id="userStation">検索中...</div>
-          <div class="sub" id="userMeta">最寄り駅を検索しています。</div>
+        <section class="visual-card" aria-label="ヒモ移動イメージ">
+          <div class="route-scene">
+            <div class="route-scene__line"></div>
+            <img id="routeMascot" class="route-scene__mascot" src="./himoty_train.jpg" alt="移動中のヒモキャラクター" />
+            <div class="route-scene__station-tag route-scene__station-tag--left">
+                <span>ヒモのいる駅</span>
+                <br>
+                <span id="fromStationTag">ヒモの駅</span>
+            </div>
+            <div class="route-scene__station-tag route-scene__station-tag--right" id="toStationTag">あなたの駅</div>
+          </div>
         </section>
-      </div>
 
-      <section class="card" style="margin-top:16px;">
-        <h2>いまの状況</h2>
-        <div class="status">
-          <strong id="statusTitle">準備中</strong>
-          <p id="statusText">画面が開いたので、まずヒモの駅を読み込んでいます。</p>
-        </div>
+        <section class="summary" aria-label="駅と交通費情報">
+          <div class="fare-pill-wrap">
+            <div class="fare-pill">
+              <span class="fare-pill__small">往復交通費</span>
+              <span class="fare-pill__amount" id="roundTripFare">¥--</span>
+            </div>
+          </div>
+        </section>
 
-        <div class="price">
-          <small>往復電車賃</small>
-          <strong id="roundTripFare">¥--</strong>
-          <p id="fareSummary">電車賃を算出しています。</p>
-        </div>
+        <div class="status-mini" id="statusMini">位置情報の利用を許可すると、最寄り駅と往復交通費を表示します。</div>
 
-        <div class="actions">
-          <button class="copy-btn" id="copyBtn">金額をコピー</button>
-          <a class="btn paypay-btn" href="https://qr.paypay.ne.jp/p2p01_FlsHkbzWa41BKLeJ" target="_blank" rel="noopener noreferrer">PayPayリンク</a>
-          <button class="reload-btn" id="reloadBtn">再読み込み</button>
-        </div>
-        <div class="copy-result" id="copyResult"></div>
-      </section>
+        <section class="actions">
+          <button id="callButton" class="cta" type="button" disabled>
+            <span class="paypay-icon">H</span>
+            <span id="callButtonLabel">計算中…</span>
+          </button>
+
+          <div class="footer-note" id="footerNote">※まだ確定はしません。ヒモが気づいたらすぐ連絡します。</div>
+
+          <div class="secondary-actions">
+            <button type="button" class="subbtn" id="reloadBtn">現在地再取得</button>
+          </div>
+        </section>
+      </main>
     </div>
+  </div>
 
-    <script>
-      const himoStationEl = document.getElementById('himoStation');
-      const himoMetaEl = document.getElementById('himoMeta');
-      const userStationEl = document.getElementById('userStation');
-      const userMetaEl = document.getElementById('userMeta');
-      const statusTitleEl = document.getElementById('statusTitle');
-      const statusTextEl = document.getElementById('statusText');
-      const roundTripFareEl = document.getElementById('roundTripFare');
-      const fareSummaryEl = document.getElementById('fareSummary');
-      const copyResultEl = document.getElementById('copyResult');
+  <script>
+    (function () {
+      const CONFIG = {
+        logoImage: window.HIMOTY_LOGO_IMAGE || './himoty_logo.jpg',
+        routeMascotImage: window.HIMOTY_ROUTE_MASCOT_IMAGE || './himoty_train.jpg',
+        himoStationApiUrl: window.HIMOTY_STATION_API_URL || '/api/himo/station',
+        nearestStationApiUrl: window.HIMOTY_NEAREST_STATION_API_URL || '/api/google/nearest-station',
+        fareApiUrl: window.HIMOTY_FARE_API_URL || '/api/yahoo/roundtrip-fare',
+        paypayUrl: window.HIMOTY_PAYPAY_URL || 'https://qr.paypay.ne.jp/p2p01_FlsHkbzWa41BKLeJ',
+        footerNote: window.HIMOTY_FOOTER_NOTE || "※まだ確定はしません。ヒモが気づいたらすぐ連絡します。",
+        fetchTimeoutMs: Number(window.HIMOTY_FETCH_TIMEOUT_MS || 12000),
+        geoTimeoutMs: Number(window.HIMOTY_GEO_TIMEOUT_MS || 12000),
+        fallbackFromStation: window.HIMOTY_FROM_STATION || '渋谷駅'
+      };
+
+      const refs = {
+        appRoot: document.getElementById('appRoot'),
+        brandLogo: document.getElementById('brandLogo'),
+        routeMascot: document.getElementById('routeMascot'),
+        fromStationTag: document.getElementById('fromStationTag'),
+        toStationTag: document.getElementById('toStationTag'),
+        roundTripFare: document.getElementById('roundTripFare'),
+        statusMini: document.getElementById('statusMini'),
+        callButton: document.getElementById('callButton'),
+        callButtonLabel: document.getElementById('callButtonLabel'),
+        reloadBtn: document.getElementById('reloadBtn'),
+        footerNote: document.getElementById('footerNote'),
+        errorBox: document.getElementById('errorBox')
+      };
 
       let latestRoundTripFare = null;
-
-      document.getElementById('copyBtn').addEventListener('click', copyFare);
-      document.getElementById('reloadBtn').addEventListener('click', init);
-
-      init();
-
-      async function init() {
-        latestRoundTripFare = null;
-        copyResultEl.textContent = '';
-        roundTripFareEl.textContent = '¥--';
-        fareSummaryEl.textContent = '電車賃を算出しています。';
-        userStationEl.textContent = '検索中...';
-        userMetaEl.textContent = '最寄り駅を検索しています。';
-
-        try {
-          setStatus('ヒモの駅を読み込み中', '保存ファイルからヒモがいる駅を取得しています。');
-          const himoRes = await fetch('/api/himo/station');
-          const himoData = await parseApiResponse(himoRes);
-          if (!himoRes.ok) throw new Error(himoData.detail || himoData.error || 'ヒモの駅を取得できませんでした');
-
-          const himo = himoData.station || himoData;
-
-          himoStationEl.textContent = himo.stationName || '未設定';
-          himoMetaEl.textContent = himoData.updatedAt
-            ? `更新: ${new Date(himoData.updatedAt).toLocaleString('ja-JP')}`
-            : 'まだ更新されていません。';
-
-          if (!navigator.geolocation) {
-            throw new Error('このブラウザでは位置情報が使えません。');
-          }
-
-          setStatus('あなたの最寄り駅を検索しています', '現在地の近くにある駅を探しています。');
-          const position = await getCurrentPosition();
-          const nearestRes = await fetch('/api/google/nearest-station', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            })
-          });
-          const nearestData = await parseApiResponse(nearestRes);
-          if (!nearestRes.ok) throw new Error(nearestData.detail || nearestData.error || '最寄り駅を取得できませんでした');
-
-          userStationEl.textContent = nearestData.station.name || '不明';
-          userMetaEl.textContent = `${nearestData.station.address || '住所情報なし'} / 約${nearestData.station.distanceMeters}m`;
-
-          setStatus('電車賃を算出しています', `${nearestData.station.name} から ${himo.stationName} の往復電車賃を計算しています。`);
-          const fareRes = await fetch('/api/yahoo/roundtrip-fare', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              from: nearestData.station.name,
-              to: himo.stationName
-            })
-          });
-          const fareData = await parseApiResponse(fareRes);
-          if (!fareRes.ok) throw new Error(fareData.detail || fareData.error || '電車賃を取得できませんでした');
-
-          latestRoundTripFare = fareData.roundTripFare;
-          roundTripFareEl.textContent = formatYen(fareData.roundTripFare);
-          fareSummaryEl.textContent = `${nearestData.station.name} → ${himo.stationName} の片道 ${formatYen(fareData.oneWayFare)} / 往復 ${formatYen(fareData.roundTripFare)} です。`;
-          setStatus('計算できました', '金額をコピーして、そのままPayPayへどうぞ。');
-        } catch (error) {
-          console.error(error);
-          setStatus('エラー', error.message || '処理に失敗しました。');
-          fareSummaryEl.textContent = '電車賃の算出に失敗しました。再読み込みでもう一度試してください。';
-        }
-      }
-
-      async function copyFare() {
-        if (!latestRoundTripFare) {
-          copyResultEl.textContent = 'まだ金額が出ていません。少し待ってください。';
-          return;
-        }
-
-        try {
-          await navigator.clipboard.writeText(String(latestRoundTripFare));
-          copyResultEl.textContent = `${latestRoundTripFare} をコピーしました。`;
-        } catch {
-          copyResultEl.textContent = `コピーできなかったので、${latestRoundTripFare} を手で入力してください。`;
-        }
-      }
-
-      function setStatus(title, text) {
-        statusTitleEl.textContent = title;
-        statusTextEl.textContent = text;
-      }
-
-      function getCurrentPosition() {
-        return new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-          });
-        });
-      }
-
-      async function parseApiResponse(response) {
-        const text = await response.text();
-        try {
-          return JSON.parse(text);
-        } catch {
-          if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
-            throw new Error('APIの代わりにHTMLが返っています。サーバー再起動後に試してください。');
-          }
-          throw new Error('APIレスポンスを読めませんでした。');
-        }
-      }
+      let currentPayload = null;
+      let isLoading = false;
 
       function formatYen(value) {
         return new Intl.NumberFormat('ja-JP', {
@@ -315,6 +517,273 @@
           maximumFractionDigits: 0
         }).format(Number(value || 0));
       }
-    </script>
-  </body>
+
+      function setLoading(flag) {
+        isLoading = flag;
+        refs.appRoot.classList.toggle('is-loading', flag);
+        refs.reloadBtn.disabled = flag;
+        refs.callButton.disabled = flag || !latestRoundTripFare;
+        if (flag) refs.callButtonLabel.textContent = '計算中…';
+        else refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+      }
+
+      function setStatus(text) {
+        refs.statusMini.textContent = text;
+      }
+
+      function showError(text) {
+        if (!text) {
+          refs.errorBox.style.display = 'none';
+          refs.errorBox.textContent = '';
+          return;
+        }
+        refs.errorBox.style.display = 'block';
+        refs.errorBox.textContent = text;
+      }
+
+      async function fetchJson(url, options, timeoutMs) {
+        const controller = new AbortController();
+        const timer = setTimeout(function () {
+          controller.abort();
+        }, timeoutMs || CONFIG.fetchTimeoutMs);
+
+        try {
+          const response = await fetch(url, {
+            ...(options || {}),
+            signal: controller.signal
+          });
+          const text = await response.text();
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (error) {
+            if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+              throw new Error('APIの代わりにHTMLが返っています。サーバー側のルーティング確認が必要です。');
+            }
+            throw new Error('APIレスポンスをJSONとして読めませんでした。');
+          }
+
+          if (!response.ok) {
+            throw new Error(data.detail || data.error || ('HTTP ' + response.status));
+          }
+          return data;
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            throw new Error('APIの応答が遅いためタイムアウトしました。');
+          }
+          throw error;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function getCurrentPositionSafe() {
+        return new Promise(function (resolve, reject) {
+          if (!navigator.geolocation) {
+            reject(new Error('このブラウザでは位置情報が使えません。'));
+            return;
+          }
+
+          let settled = false;
+          const timer = setTimeout(function () {
+            if (settled) return;
+            settled = true;
+            reject(new Error('位置情報の許可待ちが長いため中断しました。ブラウザで位置情報を許可して再読み込みしてください。'));
+          }, CONFIG.geoTimeoutMs);
+
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              if (settled) return;
+              settled = true;
+              clearTimeout(timer);
+              resolve(position);
+            },
+            function (error) {
+              if (settled) return;
+              settled = true;
+              clearTimeout(timer);
+              if (error && error.code === error.PERMISSION_DENIED) {
+                reject(new Error('位置情報が許可されていません。ブラウザで位置情報を許可してください。'));
+                return;
+              }
+              if (error && error.code === error.TIMEOUT) {
+                reject(new Error('位置情報の取得がタイムアウトしました。もう一度お試しください。'));
+                return;
+              }
+              reject(new Error('位置情報を取得できませんでした。'));
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: CONFIG.geoTimeoutMs,
+              maximumAge: 0
+            }
+          );
+        });
+      }
+
+      function normalizeHimoStation(payload) {
+        const root = payload && typeof payload === 'object' ? payload : {};
+        const station = root.station && typeof root.station === 'object' ? root.station : root;
+        return {
+          stationName: station.stationName || station.name || CONFIG.fallbackFromStation,
+          updatedAt: root.updatedAt || station.updatedAt || '',
+          raw: root
+        };
+      }
+
+      function normalizeNearestStation(payload) {
+        const root = payload && typeof payload === 'object' ? payload : {};
+        const station = root.station && typeof root.station === 'object' ? root.station : root;
+        return {
+          name: station.name || station.stationName || '',
+          address: station.address || '',
+          distanceMeters: Number(station.distanceMeters || station.distance || 0) || 0,
+          raw: root
+        };
+      }
+
+      function normalizeFare(payload) {
+        const root = payload && typeof payload === 'object' ? payload : {};
+        return {
+          oneWayFare: Number(root.oneWayFare || root.fare || 0) || 0,
+          roundTripFare: Number(root.roundTripFare || root.totalFare || 0) || 0,
+          raw: root
+        };
+      }
+
+      function renderBase() {
+        refs.brandLogo.src = CONFIG.logoImage;
+        refs.routeMascot.src = CONFIG.routeMascotImage;
+        refs.footerNote.textContent = CONFIG.footerNote;
+      }
+
+      function renderHimoStation(himo) {
+        refs.fromStationTag.textContent = himo.stationName || CONFIG.fallbackFromStation;
+      }
+
+      function renderNearestStation(nearest) {
+        refs.toStationTag.textContent = nearest.name || '読込中…';
+        const distanceText = nearest.distanceMeters ? ('約' + nearest.distanceMeters + 'm') : '距離不明';
+      }
+
+      function renderFare(fare, nearestName, himoName) {
+        latestRoundTripFare = fare.roundTripFare || null;
+        currentPayload = {
+          from: nearestName,
+          to: himoName,
+          oneWayFare: fare.oneWayFare,
+          roundTripFare: fare.roundTripFare
+        };
+
+        refs.roundTripFare.textContent = formatYen(fare.roundTripFare);
+        setStatus('電車賃を送るとヒモが来ます');
+        refs.callButton.disabled = false;
+        refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+      }
+
+      function resetForLoading() {
+        latestRoundTripFare = null;
+        currentPayload = null;
+        refs.roundTripFare.textContent = '¥--';
+        refs.fromStationTag.textContent = '読込中…';
+        refs.toStationTag.textContent = '読込中…';
+        setStatus('位置情報の利用を許可すると、最寄り駅と往復交通費を表示します。');
+        refs.callButton.disabled = true;
+        refs.callButtonLabel.textContent = '計算中…';
+      }
+
+      async function init() {
+        if (isLoading) return;
+        renderBase();
+        resetForLoading();
+        setLoading(true);
+        showError('');
+
+        try {
+          setStatus('ヒモの駅と現在地を確認しています。');
+
+          const himoPromise = fetchJson(CONFIG.himoStationApiUrl);
+          const positionPromise = getCurrentPositionSafe();
+
+          const [himoPayload, position] = await Promise.all([himoPromise, positionPromise]);
+          const himo = normalizeHimoStation(himoPayload);
+          renderHimoStation(himo);
+
+          setStatus('あなたの最寄り駅を検索しています。');
+          const nearestPayload = await fetchJson(CONFIG.nearestStationApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            })
+          });
+          const nearest = normalizeNearestStation(nearestPayload);
+          renderNearestStation(nearest);
+
+          if (!nearest.name || !himo.stationName) {
+            throw new Error('駅名が不足しているため電車賃を計算できませんでした。');
+          }
+
+          setStatus('往復交通費を計算しています。');
+          const farePayload = await fetchJson(CONFIG.fareApiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              from: nearest.name,
+              to: himo.stationName
+            })
+          });
+          const fare = normalizeFare(farePayload);
+
+          if (!fare.roundTripFare) {
+            throw new Error('往復交通費を取得できませんでした。');
+          }
+
+          renderFare(fare, nearest.name, himo.stationName);
+          console.log('金額まで計算できました。内容を確認して進めます。');
+        } catch (error) {
+          console.error(error);
+          showError(error.message || '読込に失敗しました。');
+          setStatus('読込に失敗しました。位置情報の許可とAPIの応答を確認して、再読み込みしてください。');
+          refs.callButton.disabled = true;
+          refs.callButtonLabel.textContent = 'ヒモを呼ぶ';
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      async function copyFare() {
+        if (!latestRoundTripFare) {
+          showInfo('まだ金額が出ていません。読込完了まで少し待ってください。');
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(String(latestRoundTripFare));
+          showInfo(String(latestRoundTripFare) + ' をコピーしました。');
+        } catch (error) {
+          showInfo('コピーできなかったので、' + String(latestRoundTripFare) + ' を手入力してください。');
+        }
+      }
+
+      function openPayPay() {
+        if (!latestRoundTripFare) {
+          showInfo('先に交通費の計算完了を待ってください。');
+          return;
+        }
+
+        if (CONFIG.paypayUrl) {
+          window.open(CONFIG.paypayUrl, '_blank', 'noopener');
+        }
+      }
+
+      refs.reloadBtn.addEventListener('click', init);
+      refs.callButton.addEventListener('click', openPayPay);
+
+      renderBase();
+      init();
+    })();
+  </script>
+</body>
 </html>
