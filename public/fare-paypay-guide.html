@@ -640,27 +640,46 @@
       }
 
       async function initLiffProfile() {
-        if (!CONFIG.liffId) {
-          throw new Error('LIFF ID が未設定です。');
-        }
         if (!window.liff) {
           throw new Error('LIFF SDK の読込に失敗しました。');
         }
 
-        await window.liff.init({ liffId: CONFIG.liffId });
-
-        if (!window.liff.isLoggedIn()) {
-          window.liff.login({ redirectUri: window.location.href });
-          throw new Error('LINEログインへ移動しています。ログイン後に再度お試しください。');
+        if (!CONFIG.liffId) {
+          throw new Error('LIFF ID が未設定です。');
         }
 
-        const profile = await window.liff.getProfile();
+        try {
+          await window.liff.init({
+            liffId: CONFIG.liffId
+          });
+        } catch (error) {
+          const code = error && error.code ? ` [${error.code}]` : '';
+          throw new Error(`LIFF初期化に失敗しました${code}: ${error.message || 'unknown error'}`);
+        }
+
+        if (!window.liff.isLoggedIn()) {
+          window.liff.login({
+            redirectUri: window.location.href
+          });
+          return false;
+        }
+
+        let profile;
+        try {
+          profile = await window.liff.getProfile();
+        } catch (error) {
+          const code = error && error.code ? ` [${error.code}]` : '';
+          throw new Error(`LINEプロフィール取得に失敗しました${code}: ${error.message || 'unknown error'}`);
+        }
+
         requesterDisplayName = profile && profile.displayName ? profile.displayName : '';
         requesterLineUserId = profile && profile.userId ? profile.userId : '';
 
         if (!requesterDisplayName || !requesterLineUserId) {
-          throw new Error('LINEプロフィール取得に失敗しました。');
+          throw new Error('LINEプロフィールが空です。displayName または userId を取得できませんでした。');
         }
+
+        return true;
       }
 
       function normalizeHimoStation(payload) {
