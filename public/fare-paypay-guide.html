@@ -748,16 +748,22 @@
         showSuccess('');
 
         try {
-          setStatus('LINEログインと位置情報を確認しています。');
-          const [profileResult, himoPayload, position] = await Promise.all([
-            initLiffProfile(),
-            fetchJson(CONFIG.himoStationApiUrl),
-            getCurrentPositionSafe()
-          ]);
+          setStatus('LINEログインを確認しています。');
 
-          void profileResult;
+          const liffReady = await initLiffProfile();
+
+          if (!liffReady) {
+            setStatus('LINEログインへ移動しています…');
+            return;
+          }
+
+          setStatus('ヒモの駅を取得しています。');
+          const himoPayload = await fetchJson(CONFIG.himoStationApiUrl);
           const himo = normalizeHimoStation(himoPayload);
           renderHimoStation(himo);
+
+          setStatus('現在地を取得しています。');
+          const position = await getCurrentPositionSafe();
 
           setStatus('あなたの最寄り駅を検索しています。');
           const nearestPayload = await fetchJson(CONFIG.nearestStationApiUrl, {
@@ -768,6 +774,7 @@
               longitude: position.coords.longitude
             })
           });
+
           const nearest = normalizeNearestStation(nearestPayload);
           renderNearestStation(nearest);
 
@@ -784,6 +791,7 @@
               to: himo.stationName
             })
           });
+
           const fare = normalizeFare(farePayload);
 
           if (!fare.roundTripFare) {
@@ -791,10 +799,11 @@
           }
 
           renderFare(fare, nearest.name, himo.stationName);
+          setStatus('準備ができました。ヒモを呼べます。');
         } catch (error) {
           console.error(error);
           showError(error.message || '読込に失敗しました。');
-          setStatus('読込に失敗しました。位置情報の許可・LIFF設定・API応答を確認してください。');
+          setStatus('読込に失敗しました。LIFF設定・位置情報・API応答を確認してください。');
         } finally {
           setLoading(false);
           refreshCallButtonState();
