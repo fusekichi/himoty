@@ -49,7 +49,7 @@ router.post('/', express.json(), async (req, res) => {
       `あなたの駅：${userStation}`,
       `往復交通費：${yen.format(Number(roundTripFare))}円`,
       '※ヒモからの連絡を待ってください',
-    ].join('\\n');
+    ].join('\n');
 
     const adminMessageText = [
       '【ヒモ予約通知】',
@@ -57,7 +57,7 @@ router.post('/', express.json(), async (req, res) => {
       `時間：${requestedAtLabel}`,
       `駅：${userStation}`,
       `往復交通費：${yen.format(Number(roundTripFare))}円`,
-    ].join('\\n');
+    ].join('\n');
 
     async function pushMessage(to, text) {
       const response = await fetch('https://api.line.me/v2/bot/message/push', {
