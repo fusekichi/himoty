@@ -400,7 +400,6 @@
 
       <main class="content">
         <div class="error-box" id="errorBox"></div>
-        <div class="success-box" id="successBox"></div>
 
         <section class="intro">
           <h1 class="intro__title">今すぐヒモを呼ぶ</h1>
@@ -478,8 +477,7 @@
         callButtonLabel: document.getElementById('callButtonLabel'),
         reloadBtn: document.getElementById('reloadBtn'),
         footerNote: document.getElementById('footerNote'),
-        errorBox: document.getElementById('errorBox'),
-        successBox: document.getElementById('successBox')
+        errorBox: document.getElementById('errorBox')
       };
 
       let latestRoundTripFare = null;
@@ -544,16 +542,6 @@
         }
         refs.errorBox.style.display = 'block';
         refs.errorBox.textContent = text;
-      }
-
-      function showSuccess(text) {
-        if (!text) {
-          refs.successBox.style.display = 'none';
-          refs.successBox.textContent = '';
-          return;
-        }
-        refs.successBox.style.display = 'block';
-        refs.successBox.textContent = text;
       }
 
       async function fetchJson(url, options, timeoutMs) {
@@ -745,7 +733,6 @@
         resetForLoading();
         setLoading(true);
         showError('');
-        showSuccess('');
 
         try {
           setStatus('LINEログインを確認しています。');
@@ -817,7 +804,6 @@
         }
 
         showError('');
-        showSuccess('');
         refs.callButton.disabled = true;
         refs.callButtonLabel.textContent = '送信中…';
 
@@ -842,8 +828,7 @@
           });
 
           refs.callButtonLabel.textContent = '送信しました';
-          setStatus('予約者本人と星野さんのLINEに通知を送りました。');
-          showSuccess((result && result.message) || 'LINE通知を送信しました。');
+          setStatus('ヒモを呼び出しました。ヒモが気づき次第、連絡します。');
         } catch (error) {
           console.error(error);
           showError(error.message || '呼び出し送信に失敗しました。');
